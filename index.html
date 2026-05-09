@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>A Place to Recenter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: linear-gradient(180deg, #FAF7F2 0%, #F5EFE6 100%);
+    min-height: 100vh;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    color: #3D342A;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    background: linear-gradient(180deg, rgba(250,247,242,0.95) 0%, rgba(250,247,242,0.7) 80%, rgba(250,247,242,0) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .nav-button {
+    font-family: "Inter", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8B7355;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    transition: all 0.3s ease;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-button:hover { color: #3D342A; }
+  .nav-button:disabled { opacity: 0; pointer-events: none; }
+
+  .nav-button .arrow {
+    font-size: 0.85rem;
+    line-height: 1;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(139,115,85,0.25);
+    transition: all 0.4s ease;
+  }
+
+  .dot.active {
+    background: #8B7355;
+    width: 18px;
+    border-radius: 3px;
+  }
+
+  .dot.completed { background: rgba(139,115,85,0.5); }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 6rem 2rem 4rem;
+    min-height: 100vh;
+  }
+
+  @media (min-width: 768px) {
+    .container { padding: 8rem 2rem 6rem; }
+  }
+
+  .step { display: none; }
+  .step.active {
+    display: block;
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slowFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .eyebrow {
+    font-family: "Inter", sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #8B7355;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  h1, h2 {
+    font-weight: 300;
+    line-height: 1.15;
+    color: #2C2418;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  h1 { font-size: 3rem; }
+  h2 { font-size: 2.25rem; }
+
+  @media (min-width: 768px) {
+    h1 { font-size: 3.75rem; }
+    h2 { font-size: 2.75rem; }
+  }
+
+  .lead {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    color: #3D342A;
+  }
+
+  .verse-attribution {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: #8B7355;
+    text-align: center;
+    margin-top: 0.75rem;
+    font-weight: 400;
+  }
+
+  .italic-quote {
+    font-style: italic;
+    color: #6B5D4A;
+    text-align: center;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin: 2rem 0;
+  }
+
+  .verse-block {
+    background: rgba(255,255,255,0.4);
+    border-left: 2px solid #8B7355;
+    padding: 2rem 1.5rem;
+    margin: 2rem 0;
+    text-align: center;
+    font-style: italic;
+    line-height: 1.7;
+    font-size: 1.125rem;
+    color: #3D342A;
+  }
+
+  .verse-block .verse-attribution {
+    font-style: normal;
+    margin-top: 1rem;
+  }
+
+  .button-primary {
+    display: block;
+    width: 100%;
+    margin-top: 3rem;
+    padding: 1rem 2.5rem;
+    background: transparent;
+    border: 1px solid #8B7355;
+    color: #3D342A;
+    font-family: "Inter", sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 400;
+  }
+
+  .button-primary:hover {
+    background: rgba(139,115,85,0.08);
+    transform: translateY(-1px);
+  }
+
+  .button-secondary {
+    display: block;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.85rem 2rem;
+    background: transparent;
+    border: none;
+    color: #8B7355;
+    font-family: "Inter", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 400;
+  }
+
+  .button-secondary:hover { color: #3D342A; }
+
+  .choice-card {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(139,115,85,0.3);
+    color: #3D342A;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .choice-card:hover {
+    transform: translateX(4px);
+    border-color: #8B7355;
+    background: rgba(255,255,255,0.7);
+  }
+
+  .choice-card .choice-label {
+    font-family: "Inter", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8B7355;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .choice-card .choice-text {
+    font-size: 1.125rem;
+    font-style: italic;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .reflection-permission {
+    font-style: italic;
+    color: #6B5D4A;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 1.5rem 0 2.5rem;
+  }
+
+  .question-group {
+    margin: 2.5rem 0;
+    opacity: 1;
+  }
+
+  .step.animate .question-group {
+    opacity: 0;
+    animation: slowFadeIn 1.2s ease forwards;
+  }
+
+  .step.animate .question-group.q1 { animation-delay: 0.4s; }
+  .step.animate .question-group.q2 { animation-delay: 1.6s; }
+  .step.animate .question-group.q3 { animation-delay: 2.8s; }
+  .step.animate .question-group.q4 { animation-delay: 4.0s; }
+  .step.animate .question-group.q5 { animation-delay: 5.2s; }
+  .step.animate .question-group.q6 { animation-delay: 6.4s; }
+
+  .question-text {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #2C2418;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+  }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(139,115,85,0.25);
+    border-radius: 999px;
+    color: #6B5D4A;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+
+  .chip:hover {
+    border-color: rgba(139,115,85,0.5);
+    color: #3D342A;
+  }
+
+  .chip.selected {
+    background: rgba(255,235,200,0.5);
+    border-color: #8B7355;
+    color: #2C2418;
+    box-shadow: 0 0 12px rgba(255,235,200,0.6);
+  }
+
+  .reflection-fade-in {
+    opacity: 1;
+  }
+
+  .step.animate .reflection-fade-in {
+    opacity: 0;
+    animation: slowFadeIn 1.5s ease forwards;
+    animation-delay: 7.5s;
+  }
+
+  .reflection-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(139,115,85,0.3);
+    margin: 2.5rem auto;
+  }
+
+  .reflection-instruction {
+    font-style: italic;
+    color: #6B5D4A;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 1.5rem 0;
+  }
+
+  .ready-button {
+    display: block;
+    margin: 3rem auto 0;
+    padding: 1rem 3rem;
+    background: transparent;
+    border: 1px solid #8B7355;
+    color: #3D342A;
+    font-family: "Inter", sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 400;
+  }
+
+  .ready-button:hover {
+    background: rgba(139,115,85,0.08);
+    transform: translateY(-1px);
+  }
+
+  .breath-circle {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,248,235,0.9) 0%, rgba(245,232,210,0.6) 50%, rgba(220,200,170,0.3) 100%);
+    border: 1px solid rgba(139,115,85,0.3);
+    box-shadow: 0 0 80px rgba(255,235,200,0.4);
+    margin: 4rem auto 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 4s ease-in-out, box-shadow 0.4s ease;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .breath-circle:hover {
+    box-shadow: 0 0 100px rgba(255,235,200,0.6);
+  }
+
+  .breath-circle.breathing {
+    cursor: default;
+  }
+
+  .breath-circle.breathing:hover {
+    box-shadow: 0 0 80px rgba(255,235,200,0.4);
+  }
+
+  .breath-circle.breathing-in {
+    width: 280px;
+    height: 280px;
+    transition: all 4s ease-in-out;
+  }
+
+  .breath-circle.breathing-hold {
+    width: 280px;
+    height: 280px;
+    transition: all 2s ease-in-out;
+  }
+
+  .breath-circle.breathing-out {
+    width: 160px;
+    height: 160px;
+    transition: all 6s ease-in-out;
+  }
+
+  .breath-text {
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #6B5D4A;
+    font-weight: 300;
+  }
+
+  #breathPhrase {
+    transition: opacity 0.6s ease;
+    height: 5.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+  }
+
+  @media (min-width: 768px) {
+    #breathPhrase {
+      height: 6.5rem;
+    }
+  }
+
+  #breathPhrase.fading {
+    opacity: 0;
+  }
+
+  #breathPhrase.visible {
+    opacity: 1;
+  }
+
+  .breath-counter {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85rem;
+    color: #8B7355;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .closing-text {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .closing-text p {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #2C2418;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  @media (min-width: 768px) {
+    .closing-text p { font-size: 1.875rem; }
+  }
+
+  .signature {
+    font-family: "Inter", sans-serif;
+    font-size: 0.85rem;
+    color: #8B7355;
+    text-align: center;
+    margin-top: 1.5rem;
+    letter-spacing: 0.1em;
+  }
+
+  .pillar {
+    background: rgba(255,255,255,0.5);
+    border-left: 2px solid #8B7355;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pillar-label {
+    font-family: "Inter", sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8B7355;
+    margin-bottom: 0.75rem;
+    font-weight: 400;
+  }
+
+  .pillar-text {
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #3D342A;
+  }
+
+  .center { text-align: center; }
+  .mb-large { margin-bottom: 3rem; }
+  .mt-large { margin-top: 3rem; }
+  .pt-medium { padding-top: 2rem; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav" id="topNav" style="display: none;">
+  <button class="nav-button" id="backButton" onclick="goBack()">
+    <span class="arrow">&larr;</span>
+    <span>Back</span>
+  </button>
+
+  <div class="progress-dots" id="progressDots"></div>
+
+  <button class="nav-button" onclick="goHome()">
+    <span>Home</span>
+  </button>
+</nav>
+
+<div class="container">
+
+  <!-- STEP 0: Welcome -->
+  <div class="step active" id="step-0">
+    <p class="eyebrow">A place to return to</p>
+    <h1>Be still,<br>and know.</h1>
+    <p class="verse-attribution" style="font-style: italic; margin-top: 2rem; font-size: 1rem; font-family: 'Cormorant Garamond', serif;">Psalm 46:10</p>
+
+    <div class="mt-large center" style="margin-top: 4rem;">
+      <p class="lead">Whatever brought you here,<br>whatever you're carrying,<br>whatever you're feeling &mdash;</p>
+      <p class="lead" style="margin-top: 2rem;">you are welcome here.<br>Take a breath. Walk through these pages.<br>Let Him meet you where you are.</p>
+    </div>
+
+    <button class="button-primary" onclick="selectTrack(null); goToStep('track')">Begin</button>
+  </div>
+
+  <!-- STEP TRACK: Choose your path -->
+  <div class="step" id="step-track">
+    <p class="eyebrow">Take a moment</p>
+    <h2>What's weighing on you<br>most right now?</h2>
+    <p class="italic-quote">Choose one to walk with.<br>You can come back and choose another anytime.</p>
+
+    <div class="pt-medium">
+      <button class="choice-card" onclick="selectTrack('races'); goToStep(1)">
+        <p class="choice-label">Races</p>
+        <p class="choice-text">Performance, pressure, fear of falling short, what others will think.</p>
+      </button>
+
+      <button class="choice-card" onclick="selectTrack('school'); goToStep(1)">
+        <p class="choice-label">School</p>
+        <p class="choice-text">Workload, grades, feeling behind, comparison, not enough hours.</p>
+      </button>
+
+      <button class="choice-card" onclick="selectTrack('friends'); goToStep(1)">
+        <p class="choice-label">Friends</p>
+        <p class="choice-text">Loneliness, fitting in, feeling unknown or left out.</p>
+      </button>
+
+      <button class="choice-card" onclick="selectTrack('family'); goToStep(1)">
+        <p class="choice-label">Family</p>
+        <p class="choice-text">Tension, feeling misunderstood, expectations, hard things at home.</p>
+      </button>
+
+      <button class="choice-card" onclick="selectTrack('health'); goToStep(1)">
+        <p class="choice-label">My health</p>
+        <p class="choice-text">Worry about my body, illness, injury, not feeling right.</p>
+      </button>
+
+      <button class="choice-card" onclick="selectTrack('future'); goToStep(1)">
+        <p class="choice-label">The future</p>
+        <p class="choice-text">What if, what's next, who I'll become, the unknown.</p>
+      </button>
+
+      <button class="choice-card" onclick="selectTrack('past'); goToStep(1)">
+        <p class="choice-label">The past</p>
+        <p class="choice-text">Regret, shame, things that happened, things I can't undo.</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 1: The reflection -->
+  <div class="step" id="step-1">
+    <p class="eyebrow">Take a moment</p>
+    <h2>Before we go any further.</h2>
+
+    <div class="pt-medium">
+      <p class="lead">Sit with this for a minute. There's no hurry. No one is watching. Only you and God.</p>
+      <p class="lead">Let yourself feel what you've been carrying today.</p>
+    </div>
+
+    <div class="reflection-divider"></div>
+
+    <p class="reflection-permission">Tap what fits. Or just sit with the questions. Both are fine.</p>
+
+    <div class="question-group q1">
+      <p class="question-text" id="reflectQ1">What's been on your mind?</p>
+      <div class="chip-row" id="reflectChips1">
+        <span class="chip" onclick="toggleChip(this)">Races</span>
+        <span class="chip" onclick="toggleChip(this)">School</span>
+        <span class="chip" onclick="toggleChip(this)">Friends</span>
+        <span class="chip" onclick="toggleChip(this)">Family</span>
+        <span class="chip" onclick="toggleChip(this)">The future</span>
+        <span class="chip" onclick="toggleChip(this)">Something else</span>
+      </div>
+    </div>
+
+    <div class="question-group q2">
+      <p class="question-text" id="reflectQ2">How does this feel right now?</p>
+      <div class="chip-row" id="reflectChips2">
+        <span class="chip" onclick="toggleChip(this)">Heavy</span>
+        <span class="chip" onclick="toggleChip(this)">Tight</span>
+        <span class="chip" onclick="toggleChip(this)">Tired</span>
+        <span class="chip" onclick="toggleChip(this)">Anxious</span>
+        <span class="chip" onclick="toggleChip(this)">Sad</span>
+        <span class="chip" onclick="toggleChip(this)">Numb</span>
+        <span class="chip" onclick="toggleChip(this)">Restless</span>
+        <span class="chip" onclick="toggleChip(this)">Quiet</span>
+      </div>
+    </div>
+
+    <div class="question-group q3">
+      <p class="question-text" id="reflectQ3">Who are you trying to please?</p>
+      <div class="chip-row" id="reflectChips3">
+        <span class="chip" onclick="toggleChip(this)">My team</span>
+        <span class="chip" onclick="toggleChip(this)">My coach</span>
+        <span class="chip" onclick="toggleChip(this)">My parents</span>
+        <span class="chip" onclick="toggleChip(this)">My friends</span>
+        <span class="chip" onclick="toggleChip(this)">Myself</span>
+        <span class="chip" onclick="toggleChip(this)">I'm not sure</span>
+      </div>
+    </div>
+
+    <div class="question-group q4">
+      <p class="question-text" id="reflectQ4">What are you afraid will happen?</p>
+      <div class="chip-row" id="reflectChips4">
+        <span class="chip" onclick="toggleChip(this)">I'll fail</span>
+        <span class="chip" onclick="toggleChip(this)">I'll be embarrassed</span>
+        <span class="chip" onclick="toggleChip(this)">I'll let people down</span>
+        <span class="chip" onclick="toggleChip(this)">I'll find out I'm not enough</span>
+        <span class="chip" onclick="toggleChip(this)">Something else</span>
+      </div>
+    </div>
+
+    <div class="question-group q5">
+      <p class="question-text" id="reflectQ5">What are you afraid won't happen?</p>
+      <div class="chip-row" id="reflectChips5">
+        <span class="chip" onclick="toggleChip(this)">I won't reach my potential</span>
+        <span class="chip" onclick="toggleChip(this)">I won't be loved the same</span>
+        <span class="chip" onclick="toggleChip(this)">I won't matter</span>
+        <span class="chip" onclick="toggleChip(this)">I won't be remembered</span>
+        <span class="chip" onclick="toggleChip(this)">Something else</span>
+      </div>
+    </div>
+
+    <div class="question-group q6">
+      <p class="question-text" id="reflectQ6">What would feel like rest right now?</p>
+      <div class="chip-row" id="reflectChips6">
+        <span class="chip" onclick="toggleChip(this)">Being alone</span>
+        <span class="chip" onclick="toggleChip(this)">Being known</span>
+        <span class="chip" onclick="toggleChip(this)">Letting go</span>
+        <span class="chip" onclick="toggleChip(this)">Being held</span>
+        <span class="chip" onclick="toggleChip(this)">Sleep</span>
+        <span class="chip" onclick="toggleChip(this)">Quiet</span>
+      </div>
+    </div>
+
+    <div class="reflection-fade-in">
+      <div class="reflection-divider"></div>
+
+      <p class="reflection-instruction">
+        There's no wrong answer. Whatever's there is already known by Him.
+      </p>
+      <p class="reflection-instruction">
+        When you've sat with it long enough &mdash; whether that's a minute or ten &mdash; come back to this page.
+      </p>
+
+      <button class="ready-button" onclick="goToStep(3)">I'm ready</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: The first question -->
+  <div class="step" id="step-2">
+    <p class="eyebrow">The first question</p>
+    <h2>What am I<br>seeking right now?</h2>
+    <p class="italic-quote">Be honest. Only you and God can hear this.</p>
+
+    <div class="pt-medium">
+      <button class="choice-card" onclick="goToStep(3)">
+        <p class="choice-label">Outward</p>
+        <p class="choice-text">Approval, validation, comparison, performance, what others think of me, proving I'm enough.</p>
+      </button>
+
+      <button class="choice-card" onclick="goToStep(4)">
+        <p class="choice-label">Inward &amp; Upward</p>
+        <p class="choice-text">God in me, God above me, walking faithfully, doing what He's asked, trusting Him with the rest.</p>
+      </button>
+
+      <button class="choice-card" onclick="goToStep(3)">
+        <p class="choice-label">I'm not sure</p>
+        <p class="choice-text">It's tangled. I can't tell. Help me figure it out.</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Diagnosis (per-track) -->
+  <div class="step" id="step-3">
+    <p class="eyebrow" id="diagnosisEyebrow">What you're feeling</p>
+    <h2 id="diagnosisHeading">That heaviness<br>has a name.</h2>
+
+    <div class="pt-medium" id="diagnosisBody">
+      <p class="lead">When you seek outward &mdash; when you're chasing approval, comparing yourself, trying to prove your worth &mdash; your body knows.</p>
+      <p class="lead">You feel it as <em>anxiety, tightness, fear, exhaustion, never-enough.</em></p>
+      <p class="lead">That feeling isn't a flaw in you. It's a signal. Your body is telling you: you're looking in the wrong direction. The thing you're chasing can't satisfy you.</p>
+    </div>
+
+    <div class="verse-block" id="diagnosisVerse">
+      "Fear of man will prove to be a snare,<br>
+      but whoever trusts in the Lord is kept safe."
+      <p class="verse-attribution">Proverbs 29:25</p>
+    </div>
+
+    <p class="italic-quote" id="diagnosisClose">You don't have to fight this alone.<br>Come back to who you are.</p>
+
+    <button class="button-primary" onclick="goToStep(4)">Go to truth</button>
+  </div>
+
+  <!-- STEP 4: The Truth (per-track) -->
+  <div class="step" id="step-4">
+    <p class="eyebrow" id="truthEyebrow">What is true</p>
+
+    <div class="center" style="margin: 3rem 0;" id="truthAffirmationWrap">
+      <p id="truthAffirmation" style="font-size: 1.875rem; font-weight: 300; line-height: 1.4; font-style: italic; color: #2C2418;">
+        You were loved before<br>you ran a step.
+      </p>
+    </div>
+
+    <div class="pt-medium" id="truthBody">
+      <p class="lead">You don't have to earn it. You can't lose it.</p>
+      <p class="lead">The version of you God made &mdash; the one before any of the performance, before any of the fear &mdash; that's the version He loves. That's the version He made on purpose.</p>
+      <p class="lead">He doesn't ask you to be enough. He asks if you'll go.</p>
+    </div>
+
+    <div class="verse-block" id="truthVerse">
+      "I have called you by name.<br>You are mine."
+      <p class="verse-attribution">Isaiah 43:1</p>
+    </div>
+
+    <button class="button-primary" onclick="goToStep(5)">Be still</button>
+  </div>
+
+  <!-- STEP 5: Breathing -->
+  <div class="step" id="step-5">
+    <p class="eyebrow">Breathe</p>
+    <h2 id="breathPhrase">&nbsp;</h2>
+
+    <div class="breath-circle" id="breathCircle" onclick="startBreathing()" role="button" tabindex="0" aria-label="Tap to begin breathing">
+      <span class="breath-text" id="breathText">Begin</span>
+    </div>
+
+    <p class="breath-counter" id="breathCounter"></p>
+
+    <div id="breathStart">
+      <button class="button-secondary" onclick="goToStep(6)">Skip for now</button>
+    </div>
+
+    <div id="breathInProgress" style="display: none;">
+      <button class="button-secondary" onclick="stopBreathingAndContinue()">Continue without finishing</button>
+    </div>
+
+    <div id="breathDone" style="display: none;">
+      <p class="italic-quote" style="margin-top: 2rem;">He is here. He has always been here.</p>
+      <button class="button-primary" onclick="goToStep(6)">Continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: Wait on the Lord -->
+  <div class="step" id="step-6">
+    <p class="eyebrow">What waiting means</p>
+    <h2>Wait on the Lord.</h2>
+
+    <div class="pt-medium">
+      <p class="lead">Waiting isn't doing nothing. The Hebrew word for wait &mdash; <em>qavah</em> &mdash; means to bind yourself to, to hope in, to trust expectantly.</p>
+      <p class="lead">You wait on the Lord by depending on Him. By orienting yourself to Him. By saying with your whole life: <em>I am yours, and what comes, comes from you.</em></p>
+      <p class="lead">And then something happens that you can't make happen on your own.</p>
+    </div>
+
+    <div class="verse-block">
+      "Even youths shall faint and be weary,<br>
+      and young men shall fall exhausted;<br>
+      but they who wait for the Lord<br>
+      shall renew their strength;<br>
+      they shall mount up with wings like eagles;<br>
+      they shall run and not be weary;<br>
+      they shall walk and not faint."
+      <p class="verse-attribution">Isaiah 40:30-31</p>
+    </div>
+
+    <div class="pt-medium">
+      <p class="lead">You have been weary because you've been waiting on the world.</p>
+      <p class="lead">Wait on Him instead. The renewal is not far. It comes when the waiting changes direction.</p>
+    </div>
+
+    <button class="button-primary" onclick="goToStep(7)">Continue</button>
+  </div>
+
+  <!-- STEP 7: The Sending (per-track) -->
+  <div class="step" id="step-7">
+    <p class="eyebrow" id="sendingEyebrow">Your answer</p>
+
+    <p class="italic-quote" id="sendingIntro">He is asking the same question He asked Isaiah.</p>
+
+    <h2 id="sendingCall">"Whom shall I send?<br>Who will go for us?"</h2>
+
+    <div class="center" style="margin: 4rem 0;">
+      <p id="sendingResponse" style="font-size: 2.5rem; font-weight: 300; line-height: 1.3; font-style: italic; color: #2C2418;">
+        Here am I.<br>Send me.
+      </p>
+      <p class="verse-attribution" style="margin-top: 1.5rem;" id="sendingVerseRef">Isaiah 6:8</p>
+    </div>
+
+    <div class="pt-medium" id="sendingBody">
+      <p class="lead">You don't have to feel ready. Isaiah didn't either.</p>
+      <p class="lead">Send me means: <em>I belong to you. I will go where you send me. I will trust you with what comes.</em></p>
+      <p class="lead">That's the answer. Say it again now, in your heart, where He hears it.</p>
+    </div>
+
+    <button class="button-primary" onclick="goToStep(8)">Continue</button>
+  </div>
+
+  <!-- STEP 8: What to carry (per-track) -->
+  <div class="step" id="step-8">
+    <p class="eyebrow">What to carry with you</p>
+    <h2>Go from here.</h2>
+
+    <div class="mt-large" id="pillarsContainer">
+      <div class="pillar">
+        <p class="pillar-label">Send me</p>
+        <p class="pillar-text">I belong to God. I go where He sends me. I trust Him with what comes.</p>
+      </div>
+
+      <div class="pillar">
+        <p class="pillar-label">Eyes fixed on Jesus</p>
+        <p class="pillar-text">Run the race marked out for me. Throw off what hinders. Eyes on Him, not on the runners around me.</p>
+      </div>
+
+      <div class="pillar">
+        <p class="pillar-label">Inward &amp; upward</p>
+        <p class="pillar-text">God in me. God above me. Nothing in between. Nothing else to seek.</p>
+      </div>
+
+      <div class="pillar">
+        <p class="pillar-label">Wait on the Lord</p>
+        <p class="pillar-text">Bind myself to Him. Trust His timing. He renews what the world wears down.</p>
+      </div>
+
+      <div class="pillar">
+        <p class="pillar-label">An audience of One</p>
+        <p class="pillar-text">I run for Him. The verdict is His. His verdict is already in.</p>
+      </div>
+    </div>
+
+    <div class="closing-text">
+      <p id="closingBlessing">You are loved.<br>You are sent.<br>You are free.</p>
+      <p class="signature">&mdash; Dad</p>
+    </div>
+
+    <p class="italic-quote" style="margin-top: 3rem; font-size: 1rem;">If something else is on you,<br>come back and choose another path.</p>
+
+    <button class="button-primary" onclick="goHome()">Return to the beginning</button>
+  </div>
+
+</div>
+
+<script>
+  let history = [0];
+  let currentStep = 0;
+  let currentTrack = null;
+  let breathCount = 0;
+  let breathing = false;
+  let breathTimeouts = [];
+  let visitedSteps = new Set();
+  const totalSteps = 9;
+  const stepOrder = [0, 'track', 1, 2, 3, 4, 5, 6, 7, 8];
+
+  const trackContent = {
+
+    races: {
+      reflection: {
+        q1: { question: "What's been on your mind?", chips: ["The next race", "My times", "My team", "My coach", "My body", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Heavy", "Tight", "Tired", "Anxious", "Numb", "Restless", "Quiet"] },
+        q3: { question: "Who are you trying to please?", chips: ["My team", "My coach", "My parents", "Myself", "The watching crowd", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["I'll fail", "I'll be embarrassed", "I'll let people down", "I'll find out I'm not enough", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't reach my potential", "I won't be loved the same", "I won't matter", "I won't be remembered", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Being alone", "Being known", "Letting go", "Being held", "Sleep", "Quiet"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "You've been racing<br>for the wrong audience.",
+        body: `<p class="lead">When you toe the line trying to prove your worth, your body knows before your mind does. The chest tightens. The legs hold back. The breath shortens.</p>
+               <p class="lead">It looks like a tactical decision. It feels like a failure of will. But it isn't either of those things.</p>
+               <p class="lead">It's protection. Some part of you decided that running all-out and falling short is more dangerous than running protected. So that part takes over before the gun even goes off.</p>`,
+        verseText: `"Fear of man will prove to be a snare,<br>but whoever trusts in the Lord is kept safe."`,
+        verseRef: "Proverbs 29:25",
+        close: "The audience you've been running for<br>was never the right one."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "You were loved before<br>you ran a step.",
+        body: `<p class="lead">No time on a clock made you valuable. No time on a clock can take it away.</p>
+               <p class="lead">The version of you that was made on purpose &mdash; before the racing, before the wins, before the bad days &mdash; that version is fully His. Already.</p>
+               <p class="lead">He is not asking you to be fast enough. He is asking if you'll go &mdash; and trust Him with what comes.</p>`,
+        verseText: `"I have called you by name.<br>You are mine."`,
+        verseRef: "Isaiah 43:1"
+      },
+      breath: [
+        ['Be still', 'and know that I am God'],
+        ['I have called you by name', 'you are mine'],
+        ['Do not fear', 'I am with you'],
+        ['You were loved', 'before you ran a step'],
+        ['Run with perseverance', 'eyes fixed on Jesus'],
+        ['Here am I, Lord', 'send me']
+      ],
+      sending: {
+        eyebrow: "Your answer",
+        intro: "He is asking the same question He asked Isaiah.",
+        call: '"Whom shall I send?<br>Who will go for us?"',
+        response: "Here am I.<br>Send me.",
+        verseRef: "Isaiah 6:8",
+        body: `<p class="lead">You don't have to feel ready. Isaiah didn't either.</p>
+               <p class="lead"><em>Send me</em> means: I belong to you. I will go where you send me. I will trust you with what comes.</p>
+               <p class="lead">That's the answer. Say it again now, in your heart, where He hears it.</p>`
+      },
+      pillars: [
+        { label: "Sent, not striving", text: "I race because He has sent me to race. The race itself is the act of obedience, not the result." },
+        { label: "Burn the ships", text: "Holding back is not on the menu. The decision is made before the gun. There is only forward." },
+        { label: "Eyes fixed on Jesus", text: "Not on the runners beside me. Not on the clock above me. On Him alone, who set this course." },
+        { label: "Find the ceiling", text: "The win is going hard enough to find what's actually there. A real ceiling is information. A protected one is fiction." },
+        { label: "An audience of One", text: "The verdict is His. His verdict is already in. Everything else is noise." }
+      ],
+      blessing: "You are loved.<br>You are sent.<br>You are free."
+    },
+
+    school: {
+      reflection: {
+        q1: { question: "What's pressing on you?", chips: ["A test or assignment", "Falling behind", "A class I struggle with", "Comparison", "My grades", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Overwhelmed", "Behind", "Foggy", "Tired", "Anxious", "Stuck", "Numb"] },
+        q3: { question: "Whose voice is loudest right now?", chips: ["My teachers", "My parents", "My own", "Future colleges", "Other students", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["I'll fail", "I'll fall further behind", "I'll be exposed as not smart enough", "I'll lose what I worked for", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't get into college", "I won't reach my potential", "I won't make my parents proud", "I won't catch up", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Sleep", "A clear mind", "Being told it's enough", "One thing done", "Quiet", "Time"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "The pile is too tall<br>because you're carrying it alone.",
+        body: `<p class="lead">Every assignment becomes a referendum on whether you're smart enough. Every grade becomes a piece of evidence. Every comparison adds weight that wasn't there before.</p>
+               <p class="lead">By the time you sit down to do the actual work, you're not doing one assignment. You're answering whether you measure up. No wonder you're exhausted before you start.</p>
+               <p class="lead">The mountain isn't your workload. The mountain is the meaning you've stacked on top of it.</p>`,
+        verseText: `"Come to me, all who are weary and burdened,<br>and I will give you rest."`,
+        verseRef: "Matthew 11:28",
+        close: "He doesn't ask you to carry this alone.<br>He never has."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "You are not your grades.<br>You never were.",
+        body: `<p class="lead">A report card cannot tell anyone who you are. It cannot tell you who you are. It is information about a few moments of one season &mdash; nothing more.</p>
+               <p class="lead">Wisdom isn't something you have to manufacture out of will and caffeine. It's given, freely, to anyone who asks. Asking is the beginning of getting it.</p>
+               <p class="lead">Do the work. Do it as well as you can. And when you've done what you can, lay the rest down. The verdict on you was made long before any teacher saw your name.</p>`,
+        verseText: `"If any of you lacks wisdom,<br>let him ask of God,<br>who gives generously to all<br>without finding fault."`,
+        verseRef: "James 1:5"
+      },
+      breath: [
+        ['Come to me', 'all who are weary'],
+        ['Take my yoke upon you', 'my burden is light'],
+        ['He gives wisdom', 'to those who ask'],
+        ['Cast your cares on Him', 'He cares for you'],
+        ['Do not be anxious', 'about anything'],
+        ['I come to you, Lord', 'I lay this down']
+      ],
+      sending: {
+        eyebrow: "What He says to you",
+        intro: "His invitation is an answer to exactly what you're carrying.",
+        call: '"Come to me, all who are weary<br>and burdened."',
+        response: "I will give<br>you rest.",
+        verseRef: "Matthew 11:28",
+        body: `<p class="lead">He isn't asking you to push through. He's asking you to come.</p>
+               <p class="lead">The yoke He offers is easy. The burden He offers is light. What you've been carrying isn't from Him &mdash; and it isn't yours to keep.</p>
+               <p class="lead">Lay it down for a moment. Let Him take the weight. The work will still be there. But you'll be carrying it differently.</p>`
+      },
+      pillars: [
+        { label: "Come, don't strive", text: "When the load is crushing, I stop and come to Him. Rest is not a reward for finishing. It's offered now." },
+        { label: "Wisdom is asked for", text: "I don't have to be enough on my own. I ask. He gives. That's the deal He set up." },
+        { label: "One next thing", text: "I cannot carry the whole week today. I do the next right thing. That's the only step that exists." },
+        { label: "His yoke, His pace", text: "I match my pace to His, not to anyone else's. What looks slow from the outside is faithful from the inside." },
+        { label: "Already enough", text: "My worth is not on this transcript. It was settled before the semester started." }
+      ],
+      blessing: "You are seen.<br>You are wise.<br>You are not alone."
+    },
+
+    friends: {
+      reflection: {
+        q1: { question: "What's on your heart?", chips: ["Feeling left out", "A specific friendship", "Loneliness", "Fitting in", "Being misunderstood", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Lonely", "Heavy", "Anxious", "Sad", "Invisible", "Misunderstood", "Quiet"] },
+        q3: { question: "Whose attention are you longing for?", chips: ["Specific friends", "A group I want in", "Someone I admire", "Anyone, really", "Myself", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["I'll be rejected", "I'll be left out", "I'll be seen as weird", "I'll be alone", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't be truly known", "I won't find my people", "I won't be enough for them", "I won't matter to anyone", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Being known", "Being chosen", "Being still", "Being held", "A real conversation", "Quiet"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "You're hungry<br>for something only One can give.",
+        body: `<p class="lead">There's an ache that comes from being half-known. From sitting at a table where you're tolerated but not seen. From a thousand small moments of almost belonging.</p>
+               <p class="lead">You've been trying to fill it with the people around you. They cannot fill it. Not because they don't care &mdash; because they cannot see all of you. No human can.</p>
+               <p class="lead">The hunger you feel was put there on purpose. It points to the One who sees everything and stays.</p>`,
+        verseText: `"O Lord, you have searched me<br>and you know me."`,
+        verseRef: "Psalm 139:1",
+        close: "You have never actually been alone.<br>Not once."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "You are fully known<br>and fully loved.",
+        body: `<p class="lead">There is One who knows everything about you &mdash; the things you'd never show anyone, the things you barely admit to yourself &mdash; and stays.</p>
+               <p class="lead">He doesn't call you a project. He doesn't call you a follower. He calls you friend. Jesus said it that way on purpose: <em>I have called you friends.</em></p>
+               <p class="lead">The friendships He has for you are coming. But they aren't where your worth lives. Your worth lives in being known by Him &mdash; and you already are.</p>`,
+        verseText: `"I no longer call you servants...<br>I have called you friends."`,
+        verseRef: "John 15:15"
+      },
+      breath: [
+        ['You have searched me', 'and you know me'],
+        ['I have called you', 'friend'],
+        ['Where you go', 'I go with you'],
+        ['You are precious', 'in my sight'],
+        ['I will never leave you', 'nor forsake you'],
+        ['You know me, Lord', 'I am yours']
+      ],
+      sending: {
+        eyebrow: "What He says to you",
+        intro: "Jesus gave His friends a name change before He left them.",
+        call: '"I no longer call you servants...<br>I have called you friends."',
+        response: "You know me.<br>I am yours.",
+        verseRef: "John 15:15",
+        body: `<p class="lead">Friend is the closest word He has for you. Not subject. Not servant. Not student. Friend.</p>
+               <p class="lead">A friend tells you everything. A friend doesn't disappear when things get hard. A friend stays.</p>
+               <p class="lead">However lonely the room you're in feels right now &mdash; the One who calls you friend is in it with you. Not metaphorically. Actually.</p>`
+      },
+      pillars: [
+        { label: "Called friend", text: "The deepest name He has for me isn't student or servant. It's friend. He chose that word." },
+        { label: "Fully known", text: "He sees the parts I hide and stays. That love can't be earned and can't be lost." },
+        { label: "Never alone", text: "Even when no chair is open and no name is called, He is in the room with me. Always." },
+        { label: "I don't have to perform", text: "I don't audition for His friendship. He chose me first, before I knew to choose Him back." },
+        { label: "Wait for your people", text: "He brings the right ones in His time. The waiting itself is held. So am I." }
+      ],
+      blessing: "You are known.<br>You are chosen.<br>You are never alone."
+    },
+
+    family: {
+      reflection: {
+        q1: { question: "What's on your heart?", chips: ["A specific person", "Tension at home", "Feeling misunderstood", "Expectations", "Something hard going on", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Heavy", "Frustrated", "Sad", "Tired", "Misunderstood", "Disconnected", "Quiet"] },
+        q3: { question: "Who is hardest to be with right now?", chips: ["A parent", "A sibling", "Both parents", "Myself", "Everyone", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["I'll disappoint them", "We'll keep fighting", "I'll be misunderstood", "Things won't get better", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't be understood", "We won't be close", "I won't be loved for who I am", "Things won't change", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Peace at home", "Being understood", "Being held", "Quiet", "A break", "Forgiveness"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "Home was supposed to be<br>the safe place.",
+        body: `<p class="lead">When it isn't &mdash; or when it's complicated, or loud, or the people who are supposed to know you best somehow keep missing you &mdash; the wound is unique. Strangers can hurt you, but family can hurt you in places strangers can't reach.</p>
+               <p class="lead">You've been doing the work of holding things together. Reading the temperature of every room. Trying to be the version they want. It's exhausting in a way that even you can't always name.</p>
+               <p class="lead">The family you have is not the only family you have. There's a Father who sees what they cannot see, who hears what they don't hear.</p>`,
+        verseText: `"A father to the fatherless,<br>a defender of widows,<br>is God in his holy dwelling."`,
+        verseRef: "Psalm 68:5",
+        close: "Where they fall short,<br>He is."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "You have a Father<br>who never fails.",
+        body: `<p class="lead">Even the best parents are human. They love imperfectly. They project their own fears. They miss things you wish they would see.</p>
+               <p class="lead">There is a Father who never misses. He sees you completely. He knows what your earthly family can't always know about you. He never has a bad day. He never withholds love to teach a lesson. He never gets tired.</p>
+               <p class="lead">Honor your family. Love them. And know that your deepest belonging isn't to any of them &mdash; it's to Him. Whatever your home is, you have a home with Him.</p>`,
+        verseText: `"See what kind of love the Father has given to us,<br>that we should be called children of God."`,
+        verseRef: "1 John 3:1"
+      },
+      breath: [
+        ['You are my Father', 'I am your child'],
+        ['He sets the lonely', 'in families'],
+        ['As far as the east is from the west', 'so far He removes our sins'],
+        ['Love your neighbor', 'as yourself'],
+        ['Bear with one another', 'forgive as He forgave'],
+        ['Father, I am yours', 'make me whole in your love']
+      ],
+      sending: {
+        eyebrow: "What He says to you",
+        intro: "John saw something so astonishing he had to stop and call us to look at it.",
+        call: '"See what kind of love<br>the Father has given to us."',
+        response: "I am your child.<br>You are my Father.",
+        verseRef: "1 John 3:1",
+        body: `<p class="lead">Read it slowly. <em>See what kind of love.</em> John is pointing. Stop and look at this.</p>
+               <p class="lead">You are not just allowed to be near God. You are called His child. The same word He uses for Jesus, He uses for you.</p>
+               <p class="lead">However your earthly family is loving you tonight &mdash; well, badly, somewhere in between &mdash; the Father is loving you completely. Receive it. It's already true.</p>`
+      },
+      pillars: [
+        { label: "Held by the perfect Father", text: "Where my parents fall short, He doesn't. He fills in what's missing without me having to ask." },
+        { label: "Honor without losing yourself", text: "I love them as they are, not as I wish they were. But I don't disappear to keep the peace." },
+        { label: "Forgiveness is for me", text: "What He has forgiven me of, I extend. Not because they've earned it. Because holding onto it is breaking me, not them." },
+        { label: "Patient with the slow miracle", text: "Hard families don't heal in a day. He is patient with us. I will be patient too." },
+        { label: "I have a home with Him", text: "Whatever home looks like tonight, my deepest home is with Him. That door never closes." }
+      ],
+      blessing: "You are loved.<br>You are His.<br>You are home."
+    },
+
+    health: {
+      reflection: {
+        q1: { question: "What's on your mind about your body?", chips: ["A specific symptom", "An injury", "How my body feels", "Something a doctor said", "Energy or sleep", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Anxious", "Tired", "Frustrated", "Scared", "In pain", "Heavy", "Quiet"] },
+        q3: { question: "Where does the worst of it sit?", chips: ["Not being able to do what I love", "Something being seriously wrong", "Not being believed", "Falling behind", "The unknown", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["It will get worse", "It won't go away", "I'll find out something's wrong", "I'll lose what I've built", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't get better", "I won't be the same", "I won't be believed", "I won't bounce back", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Real sleep", "A peaceful body", "Being told I'm okay", "Letting go of worry", "A normal day", "Quiet"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "Two burdens have stacked.<br>The body, and the fear about the body.",
+        body: `<p class="lead">Some of what you're carrying is the actual symptom. Some of it is the worry that wraps around the symptom and makes it heavier than it would be alone.</p>
+               <p class="lead">The mind, when it's afraid for the body, scans constantly. Every twinge becomes a question. Every question becomes a spiral. Sleep, which is when healing happens, becomes the hardest thing.</p>
+               <p class="lead">Both burdens are real. Both can be brought to the One who made this body and knows it better than any specialist ever will.</p>`,
+        verseText: `"For you formed my inward parts;<br>you knitted me together<br>in my mother's womb."`,
+        verseRef: "Psalm 139:13",
+        close: "He made you on purpose.<br>He has not stopped paying attention."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "He knit you together.<br>He has not forgotten.",
+        body: `<p class="lead">Every cell of you was placed by someone who knew exactly what He was doing. Your body is not random. It is not abandoned. It is not a problem He's annoyed about.</p>
+               <p class="lead">Sometimes bodies break. Sometimes they take a long time to heal. None of it surprises Him. None of it changes that He is the Healer &mdash; whether through doctors, through time, through His own hand.</p>
+               <p class="lead">Take care of yourself. See the doctors who can help. Sleep. Eat. Move when you can. And underneath all of it, trust that the One who made this body is still tending it.</p>`,
+        verseText: `"He heals the brokenhearted<br>and binds up their wounds."`,
+        verseRef: "Psalm 147:3"
+      },
+      breath: [
+        ['You knitted me together', 'I am wonderfully made'],
+        ['He heals the brokenhearted', 'and binds up wounds'],
+        ['Do not fear', 'I am with you'],
+        ['I will strengthen you', 'I will help you'],
+        ['Cast your anxiety on Him', 'He cares for you'],
+        ['I trust you with this body', 'you are my Healer']
+      ],
+      sending: {
+        eyebrow: "What He says to you",
+        intro: "The same God who tells the seas where to stop speaks this directly to you.",
+        call: '"Do not fear,<br>for I am with you."',
+        response: "I trust you with this body.<br>You are my Healer.",
+        verseRef: "Isaiah 41:10",
+        body: `<p class="lead">Read the verse fully: <em>Do not fear, for I am with you. Do not be dismayed, for I am your God. I will strengthen you, I will help you, I will uphold you with my righteous right hand.</em></p>
+               <p class="lead">Five promises in one breath. Notice that none of them is "you'll be fine immediately." All of them are "I am here, and I am acting on your behalf."</p>
+               <p class="lead">Whatever your body is doing tonight, the One who made it is with it. With you. Holding you up.</p>`
+      },
+      pillars: [
+        { label: "Wonderfully made", text: "He formed me on purpose. He has not made a mistake in this body." },
+        { label: "He is the Healer", text: "Whether through doctors, through time, or through His own hand &mdash; healing comes from Him." },
+        { label: "Cast it on Him", text: "Worry about my body is not my job to carry. I hand it back, every time it shows up." },
+        { label: "Sleep is sacred", text: "Rest is when He repairs. Not weakness. Not lost time. Holy work happening while I let go." },
+        { label: "Today's grace is for today", text: "I do not need to know what next year holds. He gives strength for the day I'm in." }
+      ],
+      blessing: "You are held.<br>You are healed.<br>You are His."
+    },
+
+    future: {
+      reflection: {
+        q1: { question: "What's looming?", chips: ["College", "What I'll become", "A specific decision", "The unknown", "What ifs", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Anxious", "Overwhelmed", "Lost", "Restless", "Heavy", "Excited but scared", "Quiet"] },
+        q3: { question: "What are you trying to control?", chips: ["The outcome", "Other people's opinions", "The plan", "Whether I'll be okay", "All of it", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["I'll make the wrong choice", "Everything will fall apart", "I won't be okay", "I'll regret it", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't reach my potential", "I won't find my path", "I won't be who I'm meant to be", "I won't matter", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Knowing I'll be okay", "Trust", "Being held", "One clear next step", "Quiet", "Today, just today"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "You're trying to live<br>in a year that hasn't arrived.",
+        body: `<p class="lead">The mind runs ahead. Plays the scenarios. Pictures the wrong outcomes. Plans contingencies for things that may never happen. Returns to the same loops night after night.</p>
+               <p class="lead">It feels productive. It is not. Worry is not wisdom. It is the illusion of control over things you were never meant to control in the first place.</p>
+               <p class="lead">You are trying to do something only God can do: see the road ahead. The reason you can't is that you weren't built to. The reason you're tired is that you've been trying anyway.</p>`,
+        verseText: `"Therefore do not worry about tomorrow,<br>for tomorrow will worry about itself.<br>Each day has enough trouble of its own."`,
+        verseRef: "Matthew 6:34",
+        close: "Today is enough.<br>Tomorrow is His."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "He has already walked<br>the road ahead of you.",
+        body: `<p class="lead">There is no day in your future He hasn't already seen. No decision you'll face that surprises Him. No room you'll walk into where He hasn't already arrived.</p>
+               <p class="lead">He has plans. Specific ones. For you. Not to harm you. To prosper you. To give you hope and a future that is good &mdash; even when the road there has hard parts.</p>
+               <p class="lead">Your job is not to engineer the future. Your job is to walk faithfully today. The next step is the only one that exists right now.</p>`,
+        verseText: `"For I know the plans I have for you, declares the Lord,<br>plans to prosper you and not to harm you,<br>plans to give you hope and a future."`,
+        verseRef: "Jeremiah 29:11"
+      },
+      breath: [
+        ['Do not worry about tomorrow', 'each day has its own grace'],
+        ['I know the plans I have for you', 'plans to give you hope'],
+        ['Trust in the Lord with all your heart', 'lean not on your own understanding'],
+        ['I go before you', 'and am with you'],
+        ['Be still', 'and know that I am God'],
+        ['Lead me, Lord', 'one step at a time']
+      ],
+      sending: {
+        eyebrow: "What He says to you",
+        intro: "He spoke these words to a people in exile, with no idea what was coming.",
+        call: '"For I know the plans I have for you...<br>plans to give you hope and a future."',
+        response: "Lead me, Lord.<br>One step at a time.",
+        verseRef: "Jeremiah 29:11",
+        body: `<p class="lead">He said this to people who had every reason to think their future was over. Their city was destroyed. They were strangers in a foreign land. The plans they had made for themselves were ash.</p>
+               <p class="lead">Into that, He said: <em>I know the plans.</em> Not you. Me. And they are good.</p>
+               <p class="lead">You don't need to know the road. You need to know the One leading. He has not lost track of you. The future you fear has already been entered by the One who loves you.</p>`
+      },
+      pillars: [
+        { label: "Today is enough", text: "I do not have to carry tomorrow today. Grace is given for the day I'm in, not for years I haven't reached." },
+        { label: "He goes before me", text: "Every room I'm afraid to walk into, He has already entered. The future is not unfamiliar territory to Him." },
+        { label: "Trust over control", text: "I lean not on my own understanding. He directs my paths better than I plan them." },
+        { label: "One faithful step", text: "I don't need the whole map. I need the next step. He shows that one. Then the next. Then the next." },
+        { label: "He has plans", text: "Not vague good vibes. Specific plans. For me. For hope. For a future. He said it Himself." }
+      ],
+      blessing: "You are led.<br>You are kept.<br>You are loved."
+    },
+
+    past: {
+      reflection: {
+        q1: { question: "What are you carrying?", chips: ["Something I did", "Something done to me", "A regret", "Shame", "A memory", "Something else"] },
+        q2: { question: "How does this feel right now?", chips: ["Heavy", "Ashamed", "Sad", "Angry", "Stuck", "Numb", "Quiet"] },
+        q3: { question: "What does it feel like inside?", chips: ["Guilt", "Shame", "Anger", "Sadness", "Regret", "All of it", "I'm not sure"] },
+        q4: { question: "What are you afraid will happen?", chips: ["It will define me", "I won't be forgiven", "I won't forgive", "It will happen again", "Something else"] },
+        q5: { question: "What are you afraid won't happen?", chips: ["I won't move past it", "I won't be seen as new", "I won't heal", "I won't be free of it", "Something else"] },
+        q6: { question: "What would feel like rest right now?", chips: ["Forgiveness", "Being made new", "Letting go", "Being held", "Peace", "A clean start"] }
+      },
+      diagnosis: {
+        eyebrow: "What's happening",
+        heading: "The thing won't leave you<br>because you keep picking it up.",
+        body: `<p class="lead">The past is real. What was done to you is real. What you did is real. None of it gets erased by pretending it didn't happen.</p>
+               <p class="lead">But here's what's also true. You have been carrying something He already carried for you. The cross was specifically for this. He took the weight of it &mdash; the shame, the regret, the wound &mdash; into Himself.</p>
+               <p class="lead">Every time you reach down and pick it back up, you're carrying something that doesn't belong to you anymore. He is not asking you to forget. He is asking you to put it down.</p>`,
+        verseText: `"As far as the east is from the west,<br>so far has He removed our transgressions from us."`,
+        verseRef: "Psalm 103:12",
+        close: "What He has taken,<br>you do not have to keep."
+      },
+      truth: {
+        eyebrow: "What is true",
+        affirmation: "He makes all things new.<br>The old is gone.",
+        body: `<p class="lead">There is a kind of newness only He can give. Not pretending the past didn't happen. Making you new in a way the past cannot define.</p>
+               <p class="lead">If you have wronged someone, He forgives. Completely. He gives you the strength to make it right where you can. If someone has wronged you, He sees what they did. He holds your pain in His own hands. Justice belongs to Him.</p>
+               <p class="lead">You are not what was done. You are not what you did. You are who He says you are. And He says: <em>loved, forgiven, made new.</em></p>`,
+        verseText: `"Therefore, if anyone is in Christ,<br>the new creation has come:<br>The old has gone, the new is here!"`,
+        verseRef: "2 Corinthians 5:17"
+      },
+      breath: [
+        ['As far as the east is from the west', 'I have removed it'],
+        ['Behold, I am making all things new', 'the old is gone'],
+        ['There is no condemnation', 'for those who are mine'],
+        ['He heals the brokenhearted', 'and binds up wounds'],
+        ['Cast it on Him', 'He cares for you'],
+        ['I lay it down, Lord', 'make me new']
+      ],
+      sending: {
+        eyebrow: "What He says to you",
+        intro: "John heard a voice from the throne announcing what God was doing.",
+        call: '"Behold, I am making<br>all things new."',
+        response: "I lay it down.<br>Make me new.",
+        verseRef: "Revelation 21:5",
+        body: `<p class="lead">All things. Not most things. Not the things you can fix on your own. <em>All things.</em></p>
+               <p class="lead">The thing you've been carrying that you thought disqualified you &mdash; He is making that new. The thing done to you that you didn't deserve &mdash; He is making that new too.</p>
+               <p class="lead">Your part is to lay it down. Not to fix it. Not to earn the newness. Just to put it down at His feet and let Him do what only He can do.</p>`
+      },
+      pillars: [
+        { label: "Made new", text: "The old is gone. I am not what was done. I am not what I did. I am who He says I am." },
+        { label: "Forgiven, completely", text: "He doesn't half-forgive. What He forgives, He removes &mdash; as far as the east is from the west. Forever." },
+        { label: "Forgiveness given", text: "What He has poured into me, I pour out. Not because they earned it. Because holding it is breaking me." },
+        { label: "Lay it down", text: "He already carried this. I do not have to keep holding what He has already taken." },
+        { label: "Healing has its time", text: "Wounds close in their own season. He is patient. I will be patient with myself." }
+      ],
+      blessing: "You are forgiven.<br>You are made new.<br>You are free."
+    }
+
+  };
+
+  function applyTrackContent(track) {
+    const c = trackContent[track];
+    if (!c) return;
+
+    for (let i = 1; i <= 6; i++) {
+      const q = c.reflection['q' + i];
+      if (q) {
+        document.getElementById('reflectQ' + i).textContent = q.question;
+        const chipContainer = document.getElementById('reflectChips' + i);
+        chipContainer.innerHTML = '';
+        q.chips.forEach(chipText => {
+          const chip = document.createElement('span');
+          chip.className = 'chip';
+          chip.textContent = chipText;
+          chip.onclick = () => toggleChip(chip);
+          chipContainer.appendChild(chip);
+        });
+      }
+    }
+
+    document.getElementById('diagnosisEyebrow').textContent = c.diagnosis.eyebrow;
+    document.getElementById('diagnosisHeading').innerHTML = c.diagnosis.heading;
+    document.getElementById('diagnosisBody').innerHTML = c.diagnosis.body;
+    document.getElementById('diagnosisVerse').innerHTML = c.diagnosis.verseText +
+      '<p class="verse-attribution">' + c.diagnosis.verseRef + '</p>';
+    document.getElementById('diagnosisClose').innerHTML = c.diagnosis.close;
+
+    document.getElementById('truthEyebrow').textContent = c.truth.eyebrow;
+    document.getElementById('truthAffirmation').innerHTML = c.truth.affirmation;
+    document.getElementById('truthBody').innerHTML = c.truth.body;
+    document.getElementById('truthVerse').innerHTML = c.truth.verseText +
+      '<p class="verse-attribution">' + c.truth.verseRef + '</p>';
+
+    breathPhrasesActive = c.breath;
+
+    document.getElementById('sendingEyebrow').textContent = c.sending.eyebrow;
+    document.getElementById('sendingIntro').textContent = c.sending.intro;
+    document.getElementById('sendingCall').innerHTML = c.sending.call;
+    document.getElementById('sendingResponse').innerHTML = c.sending.response;
+    document.getElementById('sendingVerseRef').textContent = c.sending.verseRef;
+    document.getElementById('sendingBody').innerHTML = c.sending.body;
+
+    const pillarsContainer = document.getElementById('pillarsContainer');
+    pillarsContainer.innerHTML = '';
+    c.pillars.forEach(p => {
+      const pillarDiv = document.createElement('div');
+      pillarDiv.className = 'pillar';
+      pillarDiv.innerHTML = '<p class="pillar-label">' + p.label + '</p>' +
+                            '<p class="pillar-text">' + p.text + '</p>';
+      pillarsContainer.appendChild(pillarDiv);
+    });
+
+    document.getElementById('closingBlessing').innerHTML = c.blessing;
+  }
+
+  let breathPhrasesActive = trackContent.races.breath;
+
+  function selectTrack(track) {
+    if (track && track !== currentTrack) {
+      visitedSteps = new Set();
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('animate'));
+    }
+    currentTrack = track;
+    if (track) applyTrackContent(track);
+  }
+
+  function stepIndex(step) {
+    return stepOrder.indexOf(step);
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('topNav');
+    const backBtn = document.getElementById('backButton');
+
+    if (currentStep === 0) {
+      nav.style.display = 'none';
+    } else {
+      nav.style.display = 'flex';
+    }
+
+    if (history.length <= 1) {
+      backBtn.disabled = true;
+    } else {
+      backBtn.disabled = false;
+    }
+
+    renderDots();
+  }
+
+  function renderDots() {
+    const container = document.getElementById('progressDots');
+    container.innerHTML = '';
+    const currentIdx = stepIndex(currentStep);
+    for (let i = 1; i < stepOrder.length; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      if (i === currentIdx) dot.classList.add('active');
+      else if (i < currentIdx) dot.classList.add('completed');
+      container.appendChild(dot);
+    }
+  }
+
+  function goToStep(n) {
+    if (currentStep === 5 && n !== 5) {
+      stopBreathing();
+      resetBreathingUI();
+    }
+
+    if (n !== history[history.length - 2]) {
+      history.push(n);
+    }
+
+    currentStep = n;
+    document.querySelectorAll('.step').forEach(s => {
+      s.classList.remove('active');
+      s.classList.remove('animate');
+    });
+    const stepId = (n === 'track') ? 'step-track' : 'step-' + n;
+    const stepEl = document.getElementById(stepId);
+
+    if (!visitedSteps.has(n)) {
+      visitedSteps.add(n);
+      stepEl.classList.add('active');
+      void stepEl.offsetWidth;
+      stepEl.classList.add('animate');
+    } else {
+      stepEl.classList.add('active');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateNav();
+  }
+
+  function goBack() {
+    if (history.length <= 1) return;
+
+    if (currentStep === 5) {
+      stopBreathing();
+      resetBreathingUI();
+    }
+
+    history.pop();
+    const prev = history[history.length - 1];
+    currentStep = prev;
+
+    document.querySelectorAll('.step').forEach(s => {
+      s.classList.remove('active');
+      s.classList.remove('animate');
+    });
+    const stepId = (prev === 'track') ? 'step-track' : 'step-' + prev;
+    const stepEl = document.getElementById(stepId);
+
+    stepEl.classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateNav();
+  }
+
+  function toggleChip(el) {
+    el.classList.toggle('selected');
+  }
+
+  function clearChips() {
+    document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
+  }
+
+  function goHome() {
+    stopBreathing();
+    resetBreathingUI();
+    clearChips();
+    currentTrack = null;
+    visitedSteps = new Set();
+
+    history = [0];
+    currentStep = 0;
+
+    document.querySelectorAll('.step').forEach(s => {
+      s.classList.remove('active');
+      s.classList.remove('animate');
+    });
+    document.getElementById('step-0').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateNav();
+  }
+
+  function stopBreathing() {
+    breathing = false;
+    breathTimeouts.forEach(t => clearTimeout(t));
+    breathTimeouts = [];
+  }
+
+  function setPhrase(text) {
+    const el = document.getElementById('breathPhrase');
+    el.innerHTML = text;
+    el.classList.remove('fading');
+    el.classList.add('visible');
+  }
+
+  function fadePhraseOut() {
+    const el = document.getElementById('breathPhrase');
+    el.classList.remove('visible');
+    el.classList.add('fading');
+  }
+
+  function clearPhrase() {
+    const el = document.getElementById('breathPhrase');
+    el.classList.remove('visible');
+    el.classList.remove('fading');
+    el.innerHTML = '&nbsp;';
+  }
+
+  function setInstruction(text) {
+    document.getElementById('breathText').textContent = text;
+  }
+
+  function resetBreathingUI() {
+    breathCount = 0;
+    document.getElementById('breathCounter').textContent = '';
+    document.getElementById('breathStart').style.display = 'block';
+    document.getElementById('breathInProgress').style.display = 'none';
+    document.getElementById('breathDone').style.display = 'none';
+    document.getElementById('breathText').textContent = 'Begin';
+    clearPhrase();
+    document.getElementById('breathCircle').className = 'breath-circle';
+  }
+
+  function stopBreathingAndContinue() {
+    stopBreathing();
+    resetBreathingUI();
+    goToStep(6);
+  }
+
+  function startBreathing() {
+    if (breathing) return;
+    breathing = true;
+    breathCount = 0;
+    document.getElementById('breathStart').style.display = 'none';
+    document.getElementById('breathInProgress').style.display = 'block';
+    document.getElementById('breathCircle').classList.add('breathing');
+    runBreathCycle();
+  }
+
+  function runBreathCycle() {
+    if (!breathing) return;
+
+    if (breathCount >= 6) {
+      breathing = false;
+      fadePhraseOut();
+      breathTimeouts.push(setTimeout(() => {
+        clearPhrase();
+      }, 600));
+      document.getElementById('breathText').textContent = '✦';
+      document.getElementById('breathCircle').className = 'breath-circle';
+      document.getElementById('breathCounter').textContent = '';
+      document.getElementById('breathInProgress').style.display = 'none';
+      document.getElementById('breathDone').style.display = 'block';
+      return;
+    }
+
+    const phrases = breathPhrasesActive[breathCount];
+    breathCount++;
+    document.getElementById('breathCounter').textContent = 'Breath ' + breathCount + ' of 6';
+
+    setInstruction('Breathe in');
+    document.getElementById('breathCircle').className = 'breath-circle breathing breathing-in';
+    setPhrase(phrases[0]);
+
+    breathTimeouts.push(setTimeout(() => {
+      if (!breathing) return;
+      fadePhraseOut();
+    }, 3400));
+
+    breathTimeouts.push(setTimeout(() => {
+      if (!breathing) return;
+      setInstruction('Hold');
+      document.getElementById('breathCircle').className = 'breath-circle breathing breathing-hold';
+    }, 4000));
+
+    breathTimeouts.push(setTimeout(() => {
+      if (!breathing) return;
+      setInstruction('Breathe out');
+      document.getElementById('breathCircle').className = 'breath-circle breathing breathing-out';
+      setPhrase(phrases[1]);
+    }, 6000));
+
+    breathTimeouts.push(setTimeout(() => {
+      if (!breathing) return;
+      fadePhraseOut();
+    }, 11400));
+
+    breathTimeouts.push(setTimeout(() => {
+      if (!breathing) return;
+      runBreathCycle();
+    }, 12000));
+  }
+
+  updateNav();
+</script>
+
+</body>
+</html>
